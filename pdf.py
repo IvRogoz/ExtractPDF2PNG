@@ -22,11 +22,20 @@ def extract_pages_as_images(pdf_path, output_folder):
         # Convert the page to an image
         image = page.get_pixmap()
 
-        # Save the image to the output folder
+        # Generate a unique image filename
         image_filename = f"{base_filename}_page_{page_number + 1}.png"
-        image_path = os.path.join(output_folder, image_filename)
+        unique_filename = image_filename
+        counter = 1
+
+        # Check if the filename already exists, if yes, append an increment
+        while os.path.exists(os.path.join(output_folder, unique_filename)):
+            unique_filename = f"{base_filename}_page_{page_number + 1}_{counter}.png"
+            counter += 1
+
+        # Save the image to the output folder
+        image_path = os.path.join(output_folder, unique_filename)
         image.save(image_path)
-        print(f"Page {page_number + 1} of {base_filename} saved as {image_path}")
+        print(f"Page {page_number + 1} of {base_filename} saved as {unique_filename}")
 
     # Close the PDF document
     pdf_document.close()
